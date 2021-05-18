@@ -10,8 +10,20 @@
     {
         public ApplicationDbContext(
             DbContextOptions options,
-            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
+            IOptions<OperationalStoreOptions> operationalStoreOptions)
+            : base(options, operationalStoreOptions)
         {
+        }
+
+        public DbSet<Question> Questions { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Difficulty> Difficulties { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
         }
     }
 }

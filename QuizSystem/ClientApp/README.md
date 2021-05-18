@@ -972,7 +972,8 @@ For example, a production setup might look like this after the app is deployed:
 
 ```
 /             - static server returns index.html with React app
-/todos        - static server returns index.html with React app
+/
+s        - static server returns index.html with React app
 /api/todos    - server handles any /api/* requests using the backend implementation
 ```
 

@@ -12,6 +12,5 @@
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequiredLength = 6;
         }
-
     }
 }
