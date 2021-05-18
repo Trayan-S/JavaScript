@@ -330,7 +330,9 @@ namespace QuizSystem.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
 
@@ -345,7 +347,9 @@ namespace QuizSystem.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -363,16 +367,25 @@ namespace QuizSystem.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CorrectAnswer")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("DifficultyId")
                         .HasColumnType("int");
 
                     b.Property<string>("IncorrectAnswers")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -380,7 +393,26 @@ namespace QuizSystem.Data.Migrations
 
                     b.HasIndex("DifficultyId");
 
+                    b.HasIndex("TypeId");
+
                     b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("QuizSystem.Models.Type", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Types");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -388,7 +420,7 @@ namespace QuizSystem.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -397,7 +429,7 @@ namespace QuizSystem.Data.Migrations
                     b.HasOne("QuizSystem.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -406,7 +438,7 @@ namespace QuizSystem.Data.Migrations
                     b.HasOne("QuizSystem.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -415,13 +447,13 @@ namespace QuizSystem.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("QuizSystem.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -430,7 +462,7 @@ namespace QuizSystem.Data.Migrations
                     b.HasOne("QuizSystem.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -439,18 +471,26 @@ namespace QuizSystem.Data.Migrations
                     b.HasOne("QuizSystem.Models.Category", "Category")
                         .WithMany("Questions")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("QuizSystem.Models.Difficulty", "Difficulty")
                         .WithMany("Questions")
                         .HasForeignKey("DifficultyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("QuizSystem.Models.Type", "Type")
+                        .WithMany("Questions")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
 
                     b.Navigation("Difficulty");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("QuizSystem.Models.Category", b =>
@@ -459,6 +499,11 @@ namespace QuizSystem.Data.Migrations
                 });
 
             modelBuilder.Entity("QuizSystem.Models.Difficulty", b =>
+                {
+                    b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("QuizSystem.Models.Type", b =>
                 {
                     b.Navigation("Questions");
                 });

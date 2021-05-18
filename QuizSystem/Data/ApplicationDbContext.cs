@@ -1,5 +1,7 @@
 ﻿namespace QuizSystem.Data
 {
+    using System.Linq;
+
     using IdentityServer4.EntityFramework.Options;
     using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
     using Microsoft.EntityFrameworkCore;
@@ -21,9 +23,20 @@
 
         public DbSet<Difficulty> Difficulties { get; set; }
 
+        public DbSet<Type> Types { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            var entities = builder.Model.GetEntityTypes().ToList();
+
+            var foreignKeys = entities.SelectMany(e => e.GetForeignKeys().Where(f => f.DeleteBehavior == DeleteBehavior.Cascade));
+
+            foreach (var foreignKey in foreignKeys)
+            {
+                foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+            }
         }
     }
 }
